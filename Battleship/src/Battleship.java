@@ -1,5 +1,4 @@
 import java.util.Scanner;
-
 public class Battleship {
     public void run() {
         int opcion, intentos, tamanyx = 10, tamanyy = 10;
@@ -44,7 +43,7 @@ public class Battleship {
                     System.out.println("Mínim 1");
                     intentos = teclado.nextInt();
                 }
-                nivel(taula2, taula3, opcion, intentos, tamanyx, tamanyy);
+                nivellPers(taula2, taula3, intentos, tamanyx, tamanyy);
                 break;
         }//del switch
     }//del run
@@ -57,11 +56,6 @@ public class Battleship {
         else if (opcion == 2) ocup = 13;
         else if (opcion == 3) ocup = 4;
 
-        if (opcion == 4) {
-            nivellPers(taula2, taula3, intentos, tamanyx, tamanyy);
-            return;
-        }
-
         crearTauler(taula2, opcion, tamanyx, tamanyy);
         mostrarTauler(taula2);
 
@@ -73,9 +67,10 @@ public class Battleship {
     }
     public void nivellPers(char[][] taula2, char[][] taula3, int intentos, int tamanyx, int tamanyy) {
         int oport=300;
+        omplirTaula(taula2, tamanyx, tamanyy);
+        omplirTaula(taula3, tamanyx, tamanyy);
         int p, z, b, l;
         Scanner tecladoPers = new Scanner(System.in);
-
         System.out.println("Cuants portavions vols?");
         p = tecladoPers.nextInt();
         System.out.println("Cuants cruissats vols?");
@@ -110,30 +105,29 @@ public class Battleship {
     }
     public int comensarJugar(char[][] taula2, char[][] taula3, int intentosrest, int ocup, int tamanyx, int tamanyy) {
         Scanner tecladoJuego = new Scanner(System.in);
-        boolean salir, sigue=false;
-        int valor = 0, y, numx = 0;
-        char x, letra='A';
+        boolean traduccion, disparoValido;
+        int valor = 0, y = 0, numx;
+        char x;
         char []letrasCord = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
         while (intentosrest >= 0) {
-            System.out.println("Dispara (A-" + letrasCord[tamanyx - 1] + ") " + "(0-" + (tamanyy - 1) + "): ");
-            x = tecladoJuego.next().charAt(0);
-            y = tecladoJuego.nextInt();
-            while (!sigue) {
-                salir=false;
-                while (!salir) {                    //
-                    if (x == letra) {               //
-                        salir = true;               //
-                    } else {                        //
-                        letra++;                    //
-                        numx++;                     //
-                    }                               //
+            traduccion=false;
+            numx=0;
+            disparoValido=false;
+            while (!disparoValido) {
+                System.out.println("Dispara (A-" + letrasCord[tamanyx - 1] + ") " + "(0-" + (tamanyy - 1) + "): ");
+                x = tecladoJuego.next().charAt(0);
+                y = tecladoJuego.nextInt();
+                while (!traduccion) {
+                    if (x == letrasCord[numx]) {
+                        traduccion = true;
+                    } else {
+                        numx++;
+                    }
                 }
-                if (numx < tamanyx && y < tamanyy) {
-                    sigue = true;
+                if (numx >= tamanyx | y >= tamanyy){
+                    System.out.println("Error en la introducció de les coordenadores");
                 } else {
-                    System.out.println("Error. Introduïx una coordenada vàlida: ");
-                    x = tecladoJuego.next().charAt(0);
-                    y = tecladoJuego.nextInt();
+                    disparoValido=true;
                 }
             }
             disparo(numx, y, taula2, taula3);
@@ -285,8 +279,7 @@ public class Battleship {
         }
     }
     public int comprobarVictoria(char[][] taula3) {
-        int numx = 0;
-        int i = 0;
+        int numx = 0, i = 0;
         while (i < taula3.length) {
             for (int j = 0; j < taula3.length; j++) {
                 if (taula3[i][j] == 'X') numx++;
