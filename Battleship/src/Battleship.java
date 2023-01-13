@@ -8,7 +8,13 @@ public class Battleship {
         System.out.println("2.- Mitjà");                                                                                //  Menú i selecció d'opció que es mostrarà a l'usuari només començar
         System.out.println("3.- Difícil");                                                                              //
         System.out.println("4.- Personalitzat");                                                                        //
-        opcion = teclado.nextInt();                                                                                     //
+        opcion = teclado.nextInt();
+
+        while (opcion > 4 | opcion < 1){
+            System.out.println("Introduïx una opció vàlida");
+            opcion = teclado.nextInt();
+        }
+        //
         if (opcion == 4) {
             System.out.println("Mode personalitzat escollit");
             System.out.println("Escolliu la mida de la matriu: ");                                                      //
